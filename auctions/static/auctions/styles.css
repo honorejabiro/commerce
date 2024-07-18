@@ -1,0 +1,8 @@
+body {
+    padding: 10px;
+}
+
+.lists1{
+    display: flex;
+    flex-direction: row;
+}

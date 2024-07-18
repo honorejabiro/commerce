@@ -1,0 +1,34 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <style>
+        .lists1 {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .lists {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; 
+            gap: 20px; 
+        }
+        .image {
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            margin-bottom: 10px; 
+        }
+    </style>
+    <h2>Categories</h2>
+    <br>
+    {% for category in categories %}
+        <a href="{% url 'category' category_id=category.id %}" class="btn btn-primary">{{category}}</a>
+        <br>
+        <br>
+    {% endfor %}
+{% endblock %}
+
+   
+    

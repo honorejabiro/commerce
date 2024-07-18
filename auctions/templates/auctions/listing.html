@@ -1,0 +1,149 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <style>
+        .lists1 {
+            display: flex;
+            flex-direction: row;
+        }
+        .image {
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <h2>Listing</h2>
+    {% if user.is_authenticated %}
+    <div>
+        {% if isOwner  %}
+            <form action="{% url 'close' listing.id %} " method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Close Listing</button>
+            </form>
+        {% endif %}
+    </div>
+    {% if not listing.isActive and user == listing.price.user %}
+        <div class="alert alert-success" role="alert">
+            Congratulations! You won the auction
+        </div>
+    {% endif %}
+    <div>
+        {% if message %}
+            {% if updated %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+               {{message}}
+            </div>
+            {% endif %}
+        {% endif %}       
+    </div>
+        {% if check == True %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{listing.image}}" alt="{{listing.title}}" class="image">
+                <div class="card-body">
+                    <div class="lists1">
+                        <label for="title">Title:</label>
+                        <p>{{listing.title}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="description">Description:</label>
+                        <p>{{listing.description}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="price">Price:</label>
+                        <p>${{listing.price.price}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="owner">Owner:</label>
+                        <p>{{listing.owner}}</p>
+                    </div>
+                    <form action="{% url 'watchlist' id=listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="position" value="member">
+                        <input type="hidden" name="id" value="{{listing.id}}">
+                        <button type="submit" class="btn btn-danger">Remove from cart</button>
+                    </form>
+                </div>
+                <br>
+            </div>
+            <br>
+            <div class="lists1">
+                <label for="comment">Comment:</label>
+                <form action="{% url 'comment' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="message">
+                    <button type="submit" class="btn btn-warning">add comment</button>
+                </form>
+            </div>
+            <br>
+            <div>
+                {% for comment in comments %}
+                    {{comment}}
+                    <br>
+                {% endfor %}
+            </div>
+            <form action="{% url 'bid' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <input type="number" min='0' name="bid">
+                <button type="submit" class="btn btn-success">Bid</button>
+            </form>
+        {% endif %}
+        {% if check == False %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{listing.image}}" alt="listing.title" class="image">
+                <div class="card-body">
+                    <div class="lists1">
+                        <label for="title">Title:</label>
+                        <p>{{listing.title}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="description">Description:</label>
+                        <p>{{listing.description}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="price">Price:</label>
+                        <p>${{listing.price.price}}</p>
+                    </div>
+                    <div class="lists1">
+                        <label for="owner">Owner:</label>
+                        <p>{{listing.owner}}</p>
+                    </div>
+                    <form action="{% url 'watchlist' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="position" value="exclusion">
+                        <input type="hidden" name="id" value="{{listing.id}}">
+                        <button type="submite" class="btn btn-primary">Add to cart</button>
+                    </form>
+                </div>
+                <br>
+            </div>
+            <div class="lists1">
+                <label for="comment">Comment:</label>
+                <form action="{% url 'comment' id=listing.id %} " method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="message">
+                    <button type="submit" class="btn btn-warning">add comment</button>
+                </form>
+            </div>
+            <br>
+            <div>
+                {% for comment in comments %}
+                    {{comment}}
+                    <br>
+                {% endfor %}
+            </div>
+            <form action="{% url 'bid' id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <input type="number" min="0" name="bid">
+                <button type="submit" class="btn btn-success">Bid</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

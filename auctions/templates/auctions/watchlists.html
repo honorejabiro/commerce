@@ -1,0 +1,49 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <style>
+        .lists1 {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .lists {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; 
+            gap: 20px; 
+        }
+        .image {
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            margin-bottom: 10px; 
+        }
+    </style>
+    <h2>{{user}}'s watchlist</h2>
+    <div class="lists">
+            {% for watchlist in watchlists %}
+                <div class="card" style="width: 18rem;">
+                    <img src="{{watchlist.image}}" alt="{{watchlist.title}}" class="image">
+                    <div class="card-body">
+                        <div class="lists1">
+                            <label for="title">Title:</label>
+                            <p>{{watchlist.title}}</p>
+                        </div>
+                        <div class="lists1">
+                            <label for="description">Description:</label>
+                            <p>{{watchlist.description}}</p>
+                        </div>
+                        <div class="lists1">
+                            <label for="price">Price:</label>
+                            <p>${{watchlist.price.price}}</p>
+                        </div>
+                        <form action="{% url 'listing' id=watchlist.id %}" method="GET">
+                            <button type="submit" class="btn btn-primary">View listing</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+    </div>
+{% endblock %}
